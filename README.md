@@ -1,56 +1,76 @@
-<h1 align="center">Olá, eu sou o Gustavo Teixeira! 👋</h1>
+<div align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=38BDF8&center=true&vCenter=true&width=600&lines=Olá,+Mundo!+👋+Sou+o+Gustavo;Estudante+de+Estatística+na+UNICAMP;Cientista+de+Dados+%26+Analista" alt="Typing SVG" />
+</div>
+
+<br>
 
 <p align="center">
-  <strong>Estudante de Estatística na UNICAMP | Cientista de Dados & Analista de Modelagem Estatística</strong>
-</p>
-
-<p align="center">
-  <a href="https://linkedin.com/in/SEU-LINKEDIN-AQUI" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
+  <a href="https://www.linkedin.com/in/gustavo-coimbra-de-souza-teixeira-0a4313306" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
   </a>
   <a href="mailto:gustavocoimbradesouzateixeira@gmail.com">
-    <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email Badge"/>
+    <img src="https://img.shields.io/badge/E-mail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/>
+  </a>
+  <a href="https://github.com/GustavoCoimbraST" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
   </a>
 </p>
 
 ---
 
-### 👨‍💻 Sobre Mim
-Sou estudante de Bacharelado em Estatística na **UNICAMP** (Previsão de conclusão: Dez/2027). Atualmente atuo como Monitor PAD de Análise de Regressão, auxiliando alunos em modelagem estatística e aplicação prática em R. Tenho forte interesse e foco em áreas analíticas, modelagem preditiva, ciência de dados e mitigação de riscos para apoio à tomada de decisão estratégica.
+## 🚀 Sobre Mim
+
+<table width="100%">
+  <tr>
+    <td width="65%" valign="top">
+      Estudante de Bacharelado em Estatística na <b>UNICAMP</b> (Previsão de conclusão: Dez/2027), focado em áreas analíticas, modelagem estatística preditiva e ciência de dados. 
+      <br><br>
+      Atualmente atuo como <b>Monitor PAD de Análise de Regressão</b>, auxiliando alunos do IMECC em modelagens e aplicações práticas em <b>R</b>. Minha paixão é transformar dados complexos em soluções estratégicas e inteligência de mercado.
+    </td>
+    <td width="35%" align="center" valign="top">
+      <b>📍 Campinas, SP</b><br>
+      🎯 <i>Em busca de estágio em Ciência de Dados / Modelagem</i>
+    </td>
+  </tr>
+</table>
 
 ---
 
-### 🛠️ Competências Técnicas
+## 🛠️ Stack Tecnológica
 
-<p>
-  <img src="https://img.shields.io/badge/R-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white" alt="R">
-  <img src="https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python">
-  <img src="https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=postgresql&logoColor=white" alt="SQL">
-  <img src="https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black" alt="Power BI">
-  <img src="https://img.shields.io/badge/Git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white" alt="Git">
-  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-  <img src="https://img.shields.io/badge/Excel-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white" alt="Excel">
-</p>
-
-* **Estatística & Modelagem:** Análise de Regressão, Inferência Estatística, Machine Learning, Deep Learning, Manipulação e Visualização de Dados.
-* **Ferramentas:** RStudio, Power BI, Google Colab, Adobe Photoshop.
+| Categoria | Tecnologias & Ferramentas |
+| :--- | :--- |
+| **Linguagens** | ![R](https://img.shields.io/badge/R-%23276DC3.svg?style=flat-square&logo=r&logoColor=white) ![Python](https://img.shields.io/badge/Python-3670A0?style=flat-square&logo=python&logoColor=ffdd54) ![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat-square&logo=postgresql&logoColor=white) |
+| **Estatística & IA** | Análise de Regressão • Inferência Estatística • Machine Learning • Deep Learning |
+| **Business & Análise** | ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=flat-square&logo=powerbi&logoColor=black) ![Excel](https://img.shields.io/badge/Excel-217346?style=flat-square&logo=microsoft-excel&logoColor=white) Visualização de Dados |
+| **Ambientes & Ferramentas** | ![Git](https://img.shields.io/badge/Git-%23F05033.svg?style=flat-square&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white) RStudio • Google Colab |
 
 ---
 
-### 💼 Experiência Acadêmica e Profissional
+## 💼 Experiência & Atuação Acadêmica
 
-* **Monitor PAD - Análise de Regressão** (Ago/2026 - Atual | UNICAMP): Suporte acadêmico em modelagem estatística (regressão linear simples/múltipla, pressupostos e aplicação em R).
-* **Assessor de Infraestrutura e Comunicação - SEMEST** (Mar/2025 - Atual | Semana da Estatística UNICAMP): Gestão de orçamentos, logística e negociação com fornecedores, além de planejamento de campanhas de divulgação.
-* **Monitor PAD - Inferência Estatística** (Mar/2026 - Jul/2026 | UNICAMP): Plantões de dúvidas e resolução de problemas sobre estimação, testes de hipóteses e inferência para turmas de graduação.
+* 📊 **Monitor PAD - Análise de Regressão** (Ago/2026 - Atual | UNICAMP)  
+  * Suporte em modelagem estatística, regressão linear simples/múltipla e validação de pressupostos utilizando R.
+* 🎓 **Monitor PAD - Inferência Estatística** (Mar/2026 - Jul/2026 | UNICAMP)  
+  * Condução de plantões e resolução de problemas focados em estimação pontual/intervalar e testes de hipóteses.
+* 🌐 **Assessor de Infraestrutura - SEMEST** (Mar/2025 - Atual | Semana da Estatística UNICAMP)  
+  * Gestão de orçamento, logística do evento e estratégias de comunicação e divulgação com parceiros.
 
 ---
 
-### 📊 Estatísticas do GitHub
+## 📈 Dashboard de Estatísticas
 
 <p align="center">
-  <img height="180" src="https://github-readme-stats.vercel.co/api?username=SEU-USUARIO-GITHUB&show_icons=true&theme=radical&include_all_commits=true&count_private=true" alt="Estatísticas do GitHub" />
-  <img height="180" src="https://github-readme-stats.vercel.co/api/top-langs/?username=SEU-USUARIO-GITHUB&layout=compact&theme=radical" alt="Linguagens mais usadas" />
+  <img src="https://github-readme-stats.vercel.co/api?username=GustavoCoimbraST&show_icons=true&theme=radical&include_all_commits=true&count_private=true&hide_border=true" alt="Stats" />
+  <img src="https://github-readme-stats.vercel.co/api/top-langs/?username=GustavoCoimbraST&layout=compact&theme=radical&hide_border=true" alt="Langs" />
 </p>
 
+<div align="center">
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=GustavoCoimbraST&theme=radical&hide_border=true" alt="Streak" />
+</div>
+
 ---
-<p align="center">✨ <i>"Transformando dados em decisões estratégicas."</i></p>
+
+<div align="center">
+  <i>"Em Deus nós confiamos, todos os outros devem trazer dados." — W. Edwards Deming</i>
+</div>
