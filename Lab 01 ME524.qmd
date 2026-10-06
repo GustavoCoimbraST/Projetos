@@ -1,0 +1,332 @@
+---
+title: "Lab 01 ME524"
+format: html
+editor: visual
+---
+
+```{r}
+#install.packages("tidyverse")
+
+#library(tidyverse)
+```
+
+#lendo o banco
+
+```{r}
+#banco colocamos no github para poder acessar de qualquer fonte
+url_dados = "https://raw.githubusercontent.com/GustavoCST/Lab-01-ME524-Computa-o-aplicada-a-estat-stica-/refs/heads/main/brasileirao_2026.csv"
+
+dados_brasileirao <- read.csv(url_dados, stringsAsFactors = FALSE)
+```
+
+
+```{r}
+# Visualizar as primeiras linhas para garantir
+head(dados_brasileirao)
+```
+
+
+```{r}
+#install.packages(c("rlang", "vctrs", "dplyr"))
+```
+
+
+```{r}
+# 1. Separar jogos já realizados (gols preenchidos) e jogos pendentes (gols vazios)
+jogos_realizados <- dados_brasileirao %>% 
+  filter(!is.na(gols_mandante) & !is.na(gols_visitante))
+
+jogos_pendentes <- dados_brasileirao %>% 
+  filter(is.na(gols_mandante) | is.na(gols_visitante))
+
+#Aqui pegamos nossa tabela e separamos em duas, uma com o jogos que ja ocorreram e outra com os que precisam ocorrer
+
+# 2. Calcular os parâmetros theta (média de gols marcados) e phi (média de gols sofridos) por time
+times <- unique(c(dados_brasileirao$time_mandante, dados_brasileirao$time_visitante))
+
+tabela_parametros <- data.frame(
+  time = times,
+  theta = 0, # Média de gols marcados
+  phi = 0,   # Média de gols sofridos
+  stringsAsFactors = FALSE
+)
+
+#aqui pegamos todos os nomes únicos de times que aparecem como mandantes ou visitantes para garantir que temos a lista completa das 20 equipes do campeonato.
+
+#entao criamos uma tabela vazia chamada tabela_parametros contendo três colunas: o nome do time, o theta (que inicializamos com zero) e o phi (também inicializado com zero).
+
+for(i in 1:nrow(tabela_parametros)) {
+  t <- tabela_parametros$time[i]
+  
+  # Jogos em casa do time
+  casa <- jogos_realizados %>% filter(time_mandante == t)
+  # Jogos fora do time
+  fora <- jogos_realizados %>% filter(time_visitante == t)
+  
+  gols_marcados <- sum(casa$gols_mandante) + sum(fora$gols_visitante)
+  gols_sofridos <- sum(casa$gols_visitante) + sum(fora$gols_mandante)
+  total_jogos <- nrow(casa) + nrow(fora)
+  
+  if(total_jogos > 0) {
+    tabela_parametros$theta[i] <- gols_marcados / total_jogos
+    tabela_parametros$phi[i] <- gols_sofridos / total_jogos
+  }
+}
+
+#aqui criamos nosso loop do calculo de theta e phi, onde ele passou pelos 20 times um de cada vez e:
+#filtrou todos os jogos em que o time jogou em casa e todos em que jogou fora, considerando apenas os jogos_realizados.
+#Somou todos os gols que o time marcou (quando jogava em casa + quando jogava fora) e dividiu pelo número total de partidas que ele disputou até agora. Esse resultado é o theta (taxa de gols marcados)
+#Somou todos os gols que o time sofreu (gols do adversário quando jogava em casa + gols do adversário quando jogava fora) e dividiu pelo total de partidas. Esse resultado é o phi (taxa de gols sofridos ).
+
+# Visualizar os parâmetros calculados
+head(tabela_parametros)
+```
+
+#Agora vamos simular as partidas faltantes
+
+```{r}
+# Função para simular os gols de uma partida entre dois times
+simular_partida <- function(mandante, visitante, parametros) {
+  
+  # 1. Obter os parâmetros de ataque e defesa do time mandante
+  p_m <- parametros %>% filter(time == mandante)
+  theta_m <- p_m$theta
+  phi_m <- p_m$phi
+  
+  # 2. Obter os parâmetros de ataque e defesa do time visitante
+  p_v <- parametros %>% filter(time == visitante)
+  theta_v <- p_v$theta
+  phi_v <- p_v$phi
+  
+#criamos uma função chamada simular_partida que recebe três informações: o nome do time mandante, o nome do time visitante e a tabela com os parâmetros (tabela_parametros) que calculamos no passo anterior.
+#e depois a função usa o filter() para buscar na tabela o theta (ataque) e o phi (defesa) específicos de cada um dos dois times que vão entrar em campo
+  
+  # 3. Calcular as taxas (lambdas) da Poisson para cada um
+  lambda_mandante <- (theta_m + phi_v) / 2
+  lambda_visitante <- (theta_v + phi_m) / 2
+  
+  # Garantir um valor mínimo de segurança para o lambda (evitar zero absoluto)
+  lambda_mandante <- max(lambda_mandante, 0.01)
+  lambda_visitante <- max(lambda_visitante, 0.01)
+  
+#aqui aplicamos a formula
+#A expectativa de gols do mandante depende da média entre o ataque do mandante (theta_m) e a defesa do visitante (phi_v)
+#A expectativa de gols do visitante depende da média entre o ataque do visitante ($\theta_v$) e a defesa do mandante ($\phi_m$).
+#A linha com max(..., 0.01) é apenas uma precaução garantir que o parâmetro lambda nunca seja exatamente zero
+  
+  # 4. Sortear o número de gols usando a distribuição de Poisson (função rpois do R)
+  gols_mandante <- rpois(1, lambda = lambda_mandante)
+  gols_visitante <- rpois(1, lambda = lambda_visitante)
+  
+  # Retorna os gols sorteados
+  return(c(gols_mandante = gols_mandante, gols_visitante = gols_visitante))
+}
+
+
+#Usamos a função nativa do R rpois(n, lambda). Ela serve justamente para sortear números inteiros aleatórios (0, 1, 2, 3...) seguindo uma distribuição de Poisson com base na taxa esperada (lambda) que calculamos antes. O 1 significa que queremos sortear 1 placar para aquela partida.
+#Por fim, a função devolve (return) um vetor com os gols sorteados do mandante e do visitante.
+
+
+# Exemplo de teste da função para um jogo hipotético:
+# simular_partida("Flamengo", "Palmeiras", tabela_parametros)
+```
+
+
+##etapa Código do Loop de Monte Carlo e funçaõ de classificação
+
+```{r}
+# Função para calcular a classificação completa do campeonato
+calcular_classificacao <- function(jogos) {
+  
+  # 1. Pegar todos os times únicos que aparecem nos jogos
+  times <- unique(c(jogos$time_mandante, jogos$time_visitante))
+  
+  # 2. Criar a tabela base zerada para todos os times
+  tabela <- data.frame(
+    time = times,
+    pontos = 0,
+    vitorias = 0,
+    empates = 0,
+    derrotas = 0,
+    gols_pro = 0,
+    gols_contra = 0,
+    saldo_gols = 0,
+    stringsAsFactors = FALSE
+  )
+  
+  if(nrow(jogos) == 0) return(tabela)
+  
+#Primeiro, ela olha a lista de jogos que você passou para ela e descobre quais são todos os 20 times únicos envolvidos. Em seguida, cria uma tabela onde cada time começa com zero em todas as estatísticas (pontos, vitórias, gols, etc.). Se a lista de jogos estiver vazia, ela apenas devolve essa tabela zerada.
+  
+  # 3. Iterar sobre cada jogo para computar as estatísticas
+  for(i in 1:nrow(jogos)) {
+    m <- jogos$time_mandante[i]
+    v <- jogos$time_visitante[i]
+    gm <- jogos$gols_mandante[i]
+    gv <- jogos$gols_visitante[i]
+    
+    # Encontrar os índices dos times na tabela
+    idx_m <- which(tabela$time == m)
+    idx_v <- which(tabela$time == v)
+    
+    # Atualizar gols pró e contra
+    tabela$gols_pro[idx_m] <- tabela$gols_pro[idx_m] + gm
+    tabela$gols_contra[idx_m] <- tabela$gols_contra[idx_m] + gv
+    tabela$gols_pro[idx_v] <- tabela$gols_pro[idx_v] + gv
+    tabela$gols_contra[idx_v] <- tabela$gols_contra[idx_v] + gm
+    
+#A função passa por cada partida da tabela, uma por uma. Ela pega os gols do mandante (gm) e do visitante (gv), localiza onde cada time está na tabela e atualiza os gols marcados (gols_pro) e sofridos (gols_contra).
+    
+    # Atualizar pontos, vitórias, empates e derrotas com base no resultado
+    if(gm > gv) {
+      # Vitória do mandante
+      tabela$vitorias[idx_m] <- tabela$vitorias[idx_m] + 1
+      tabela$pontos[idx_m] <- tabela$pontos[idx_m] + 3
+      tabela$derrotas[idx_v] <- tabela$derrotas[idx_v] + 1
+    } else if(gm < gv) {
+      # Vitória do visitante
+      tabela$vitorias[idx_v] <- tabela$vitorias[idx_v] + 1
+      tabela$pontos[idx_v] <- tabela$pontos[idx_v] + 3
+      tabela$derrotas[idx_m] <- tabela$derrotas[idx_m] + 1
+    } else {
+      # Empate
+      tabela$empates[idx_m] <- tabela$empates[idx_m] + 1
+      tabela$pontos[idx_m] <- tabela$pontos[idx_m] + 1
+      tabela$empates[idx_v] <- tabela$empates[idx_v] + 1
+      tabela$pontos[idx_v] <- tabela$pontos[idx_v] + 1
+    }
+  }
+
+#Aqui ela aplica as regras de pontuação do futebol:
+#Se o mandante fez mais gols, ganha 3 pontos e +1 vitória; o visitante ganha +1 derrota.
+#Se o visitante fez mais gols, ganha 3 pontos e +1 vitória; o mandante ganha +1 derrota.
+#Se o número de gols foi igual (empate), ambos ganham 1 ponto e +1 empate.
+
+  
+  # 4. Calcular o saldo de gols
+  tabela$saldo_gols <- tabela$gols_pro - tabela$gols_contra
+  
+  # 5. Ordenar segundo os critérios oficiais do Brasileirão:
+  # - Número de pontos (decrescente)
+  # - Número de vitórias (decrescente)
+  # - Saldo de gols (decrescente)
+  # - Número de gols marcados / Gols Pró (decrescente)
+  tabela <- tabela %>% 
+    arrange(desc(pontos), desc(vitorias), desc(saldo_gols), desc(gols_pro))
+  
+  # 6. Adicionar a coluna de colocação final (1º ao 20º)
+  tabela$colocacao <- 1:nrow(tabela)
+  
+  return(tabela)
+}
+
+#Aqui em criterio de sdesmepate:
+#Subtrai os gols sofridos dos gols marcados para achar o saldo de gols.
+#Usa a função arrange(desc(...)) para ordenar os times seguindo a ordem exigida pelas regras do Brasileirão: primeiro por Pontos, depois por Vitórias, depois por Saldo de Gols, e por fim por Gols Pró (todos em ordem decrescente, do maior para o menor).
+#eai cria a coluna colocacao numerando os times de 1 a 20 e devolve (return) a tabela pronta.
+
+# --- TESTANDO A FUNÇÃO ---
+# Vamos testar a função utilizando apenas os jogos realizados para ver a tabela atual do campeonato até 03/09/2026:
+tabela_atual <- calcular_classificacao(jogos_realizados)
+print(tabela_atual)
+```
+### agora sim monte carlo
+
+```{r}
+# ==========================================
+# SIMULAÇÃO DE MONTE CARLO (CORRIGIDA)
+# ==========================================
+
+n_simulacoes <- 200
+times <- unique(c(dados_brasileirao$time_mandante, dados_brasileirao$time_visitante))
+
+# Inicializa os contadores com zeros garantindo nomes limpos
+contador_campeao <- rep(0, length(times))
+names(contador_campeao) <- times
+
+contador_rebaixado <- rep(0, length(times))
+names(contador_rebaixado) <- times
+
+# Tabela base dos jogos já realizados
+tabela_base_realizados <- calcular_classificacao(jogos_realizados)
+
+set.seed(123)
+tempo_inicio <- Sys.time()
+
+for(sim in 1:n_simulacoes) {
+  
+  tabela_sim <- tabela_base_realizados
+  
+  if(nrow(jogos_pendentes) > 0) {
+    for(j in 1:nrow(jogos_pendentes)) {
+      mandante <- jogos_pendentes$time_mandante[j]
+      visitante <- jogos_pendentes$time_visitante[j]
+      
+      placar <- simular_partida(mandante, visitante, tabela_parametros)
+      gm <- placar["gols_mandante"]
+      gv <- placar["gols_visitante"]
+      
+      idx_m <- which(tabela_sim$time == mandante)
+      idx_v <- which(tabela_sim$time == visitante)
+      
+      tabela_sim$gols_pro[idx_m] <- tabela_sim$gols_pro[idx_m] + gm
+      tabela_sim$gols_contra[idx_m] <- tabela_sim$gols_contra[idx_m] + gv
+      tabela_sim$gols_pro[idx_v] <- tabela_sim$gols_pro[idx_v] + gv
+      tabela_sim$gols_contra[idx_v] <- tabela_sim$gols_contra[idx_v] + gm
+      
+      if(gm > gv) {
+        tabela_sim$vitorias[idx_m] <- tabela_sim$vitorias[idx_m] + 1
+        tabela_sim$pontos[idx_m] <- tabela_sim$pontos[idx_m] + 1 + 2 # +3 pontos
+        tabela_sim$derrotas[idx_v] <- tabela_sim$derrotas[idx_v] + 1
+      } else if(gm < gv) {
+        tabela_sim$vitorias[idx_v] <- tabela_sim$vitorias[idx_v] + 1
+        tabela_sim$pontos[idx_v] <- tabela_sim$pontos[idx_v] + 3
+        tabela_sim$derrotas[idx_m] <- tabela_sim$derrotas[idx_m] + 1
+      } else {
+        tabela_sim$empates[idx_m] <- tabela_sim$empates[idx_m] + 1
+        tabela_sim$pontos[idx_m] <- tabela_sim$pontos[idx_m] + 1
+        tabela_sim$empates[idx_v] <- tabela_sim$empates[idx_v] + 1
+        tabela_sim$pontos[idx_v] <- tabela_sim$pontos[idx_v] + 1
+      }
+    }
+  }
+  
+  tabela_sim$saldo_gols <- tabela_sim$gols_pro - tabela_sim$gols_contra
+  tabela_sim <- tabela_sim %>% 
+    arrange(desc(pontos), desc(vitorias), desc(saldo_gols), desc(gols_pro))
+  
+  # Registra campeão e rebaixados de forma segura
+  campeao <- tabela_sim$time[1]
+  contador_campeao[campeao] <- contador_campeao[campeao] + 1
+  
+  rebaixados <- tabela_sim$time[17:20]
+  for(r in rebaixados) {
+    contador_rebaixado[r] <- contador_rebaixado[r] + 1
+  }
+}
+
+tempo_fim <- Sys.time()
+print(tempo_fim - tempo_inicio)
+
+# ==========================================
+# RESULTADOS FINAIS EM FORMATO DE PROBABILIDADE (0 a 1)
+# ==========================================
+
+tabela_probabilidades <- data.frame(
+  time = times,
+  prob_campeao = contador_campeao / n_simulacoes,
+  prob_rebaixamento = contador_rebaixado / n_simulacoes,
+  stringsAsFactors = FALSE
+) %>% 
+  arrange(desc(prob_campeao), desc(prob_rebaixamento))
+
+# Exibir a tabela com as probabilidades decimais
+print(tabela_probabilidades)
+```
+
+
+```{r}
+
+```
+
+
